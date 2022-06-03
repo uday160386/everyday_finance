@@ -24,10 +24,12 @@ pipeline {
 
     stage('Docker Build and Push') {
       steps {
+
           sh 'printenv'
           sh 'docker build -t venmaum/secops-app:""$GIT_COMMIT"" .'
           sh 'docker push venmaum/secops-app:""$GIT_COMMIT""'
-        }      }
+
+      }
     }
   }
 }
