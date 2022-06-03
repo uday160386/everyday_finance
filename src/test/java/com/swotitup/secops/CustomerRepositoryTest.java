@@ -3,7 +3,7 @@ package com.swotitup.secops;
 import com.swotitup.secops.model.Customers;
 
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ public class CustomerRepositoryTest {
         customer = repository.findAll();
         assertEquals(4, customer.size());
 
-        assertThat(customer).extracting(Customers::getFirstName).containsOnly("C++");
+        assertThat(customer).extracting(Customers::getFirstName).contains("uday");
 
     }
 
