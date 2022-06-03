@@ -36,7 +36,7 @@ public class CustomerRepositoryTest {
 
         List<Customers> customer;
         customer = repository.findAll();
-        assertEquals(1, customer.size());
+        assertEquals(4, customer.size());
 
         assertThat(customer).extracting(Customers::getFirstName).containsOnly("C++");
 
