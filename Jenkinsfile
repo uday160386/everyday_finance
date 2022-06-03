@@ -1,6 +1,9 @@
 pipeline {
   agent any
 
+environment {
+		DOCKERHUB_CREDENTIALS=credentials('docker-hub')
+	}
   stages {
 
     stage('Build Artifact - Maven') {
@@ -24,11 +27,14 @@ pipeline {
 
     stage('Docker Build and Push') {
       steps {
-        withDockerRegistry([credentialsId: "docker-hub", url: ""]) {
+
           sh 'printenv'
+
           sh 'docker build -t venmaum/secops-app:""$GIT_COMMIT"" .'
+          sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
           sh 'docker push venmaum/secops-app:""$GIT_COMMIT""'
-        }
+          sh 'docker logout'
+
       }
     }
   }
