@@ -30,12 +30,20 @@ environment {
 
           sh 'printenv'
 
-          sh 'docker build -t venmaum/secops-app:""$GIT_COMMIT"" .'
+          sh 'docker build -t venmaum/secops-app:""$BUILD_NUMBER"" .'
           sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-          sh 'docker push venmaum/secops-app:""$GIT_COMMIT""'
+          sh 'docker push venmaum/secops-app:""$BUILD_NUMBER""'
           sh 'docker logout'
 
       }
     }
+     stage('Kubernetes Deployment - DEV') {
+          steps {
+            withKubeConfig([credentialsId: 'kubeconfig']) {
+              sh "sed -i 's#replace#venmaum/secops-app:${GIT_COMMIT}#g' K8_secops_deployment.yaml"
+              sh "kubectl apply -f K8_secops_deployment.yaml"
+            }
+          }
+        }
   }
 }
