@@ -40,7 +40,7 @@ environment {
      stage('Kubernetes Deployment - DEV') {
           steps {
             withKubeConfig([credentialsId: 'kubeconfig']) {
-              sh "sed -i 's#replace#venmaum/secops-app:${GIT_COMMIT}#g' K8_secops_deployment.yaml"
+              sh "sed -i 's#replace#venmaum/secops-app:${$BUILD_NUMBER}#g' K8_secops_deployment.yaml"
               sh "kubectl apply -f K8_secops_deployment.yaml"
             }
           }
