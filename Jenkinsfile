@@ -35,11 +35,20 @@ environment {
 //         }
 //       }
 //     }
-stage('SonarQube - SAST') {
-      steps {
-        sh "mvn sonar:sonar -Dsonar.projectKey=swotitup_secops -Dsonar.host.url=http://swotitup.southeastasia.cloudapp.azure.com:9000 -Dsonar.login=9b22a188940e36f5298c819e7e90960e3278d233"
-      }
-    }
+
+    stage('SonarQube - SAST') {
+          steps {
+            withSonarQubeEnv('SonarQube') {
+              sh "mvn sonar:sonar -Dsonar.projectKey=swotitup_secops -Dsonar.host.url=http://swotitup.southeastasia.cloudapp.azure.com:9000 -Dsonar.login=9b22a188940e36f5298c819e7e90960e3278d233"
+            }
+            timeout(time: 2, unit: 'MINUTES') {
+              script {
+                waitForQualityGate abortPipeline: true
+              }
+            }
+          }
+        }
+
     stage('Docker Build and Push') {
       steps {
 
