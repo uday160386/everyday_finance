@@ -48,14 +48,19 @@ environment {
             }
           }
         }
-stage('Vulnerability Scan - Docker ') {
+// stage('Vulnerability Scan - Docker ') {
+//       steps {
+//         sh "mvn dependency-check:check"
+//       }
+//       post {
+//         always {
+//           dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+//         }
+//       }
+//     }
+ stage('Vulnerability Scan - Kubernetes') {
       steps {
-        sh "mvn dependency-check:check"
-      }
-      post {
-        always {
-          dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
-        }
+        sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
       }
     }
     stage('Docker Build and Push') {
