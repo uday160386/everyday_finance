@@ -25,14 +25,19 @@ environment {
         }
       }
     }
-stage('Mutation Tests - PIT') {
+// stage('Mutation Tests - PIT') {
+//       steps {
+//         sh "mvn org.pitest:pitest-maven:mutationCoverage"
+//       }
+//       post {
+//         always {
+//           pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
+//         }
+//       }
+//     }
+stage('SonarQube - SAST') {
       steps {
-        sh "mvn org.pitest:pitest-maven:mutationCoverage"
-      }
-      post {
-        always {
-          pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
-        }
+        sh "mvn sonar:sonar -Dsonar.projectKey=swotitup_secops -Dsonar.host.url=http://swotitup.southeastasia.cloudapp.azure.com:9000 -Dsonar.login=9b22a188940e36f5298c819e7e90960e3278d233"
       }
     }
     stage('Docker Build and Push') {
