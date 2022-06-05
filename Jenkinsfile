@@ -50,13 +50,6 @@ environment {
             }
           }
         }
-    stage('OWASP ZAP - DAST') {
-          steps {
-            withKubeConfig([credentialsId: 'kubeconfig']) {
-              sh 'bash zap.sh'
-            }
-          }
-        }
 // stage('Vulnerability Scan - Docker ') {
 //       steps {
 //         sh "mvn dependency-check:check"
@@ -67,23 +60,23 @@ environment {
 //         }
 //       }
 //     }
- stage('Vulnerability Scan - Kubernetes') {
-      steps {
-        sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
-      }
-    }
-    stage('Docker Build and Push') {
-      steps {
-
-          sh 'printenv'
-
-          sh 'docker build -t venmaum/secops-app:""$BUILD_NUMBER"" .'
-          sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-          sh 'docker push venmaum/secops-app:""$BUILD_NUMBER""'
-          sh 'docker logout'
-
-      }
-    }
+//  stage('Vulnerability Scan - Kubernetes') {
+//       steps {
+//         sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
+//       }
+//     }
+//     stage('Docker Build and Push') {
+//       steps {
+//
+//           sh 'printenv'
+//
+//           sh 'docker build -t venmaum/secops-app:""$BUILD_NUMBER"" .'
+//           sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+//           sh 'docker push venmaum/secops-app:""$BUILD_NUMBER""'
+//           sh 'docker logout'
+//
+//       }
+//     }
      stage('Kubernetes Deployment - DEV') {
           steps {
             withKubeConfig([credentialsId: 'kubeconfig']) {
@@ -92,5 +85,12 @@ environment {
             }
           }
         }
+     stage('OWASP ZAP - DAST') {
+               steps {
+                 withKubeConfig([credentialsId: 'kubeconfig']) {
+                   sh 'bash zap.sh'
+                 }
+               }
+             }
   }
 }
