@@ -1,3 +1,5 @@
+@Library('slack') _
+
 pipeline {
   agent any
 
@@ -89,17 +91,26 @@ environment {
             }
           }
         }
-     stage('OWASP ZAP - DAST') {
-               steps {
-                 withKubeConfig([credentialsId: 'kubeconfig']) {
-                   sh 'bash zap.sh'
-                 }
-               }
-             }
-  }
+        stages {
+            stage('Testing Slack') {
+              steps {
+                sh 'exit 1'
+              }
+            }
+
+          }
+//      stage('OWASP ZAP - DAST') {
+//                steps {
+//                  withKubeConfig([credentialsId: 'kubeconfig']) {
+//                    sh 'bash zap.sh'
+//                  }
+//                }
+//              }
+//   }
   post {
       always {
        publishHTML([allowMissing:false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap_report.html', reportName: 'OWASP ZAP HTML Report', reportTitles: 'OWASP ZAP'])
+        send_notification currentBuild.result
       }
 
       // success {
