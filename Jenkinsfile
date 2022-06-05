@@ -5,6 +5,10 @@ environment {
 		DOCKERHUB_CREDENTIALS=credentials('docker-hub')
 		applicationURL = "http://swotitup.southeastasia.cloudapp.azure.com"
         applicationURI = "/customerses"
+        deploymentName = "swotitup-secops"
+        containerName = "swotitup-secops"
+        serviceName = "swotitup-secops-svc"
+        imageName = "venmaum/secops-app:${BUILD_NUMBER}"
 
 	}
   stages {
@@ -65,18 +69,18 @@ environment {
 //         sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
 //       }
 //     }
-//     stage('Docker Build and Push') {
-//       steps {
-//
-//           sh 'printenv'
-//
-//           sh 'docker build -t venmaum/secops-app:""$BUILD_NUMBER"" .'
-//           sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-//           sh 'docker push venmaum/secops-app:""$BUILD_NUMBER""'
-//           sh 'docker logout'
-//
-//       }
-//     }
+    stage('Docker Build and Push') {
+      steps {
+
+          sh 'printenv'
+
+          sh 'docker build -t venmaum/secops-app:""$BUILD_NUMBER"" .'
+          sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+          sh 'docker push venmaum/secops-app:""$BUILD_NUMBER""'
+          sh 'docker logout'
+
+      }
+    }
      stage('Kubernetes Deployment - DEV') {
           steps {
             withKubeConfig([credentialsId: 'kubeconfig']) {
