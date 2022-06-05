@@ -41,7 +41,7 @@ environment {
     stage('SonarQube - SAST') {
           steps {
             withSonarQubeEnv('SonarQube') {
-              sh "mvn sonar:sonar -Dsonar.projectKey=swotitup_secops -Dsonar.host.url=http://swotitup.southeastasia.cloudapp.azure.com:9000 -Dsonar.login=9b22a188940e36f5298c819e7e90960e3278d233"
+              sh "mvn sonar:sonar -Dsonar.projectKey=swotitup_secops -Dsonar.host.url=http://swotitup.southeastasia.cloudapp.azure.com:9000 -Dsonar.login=2cc8403c8b8d98685979d2d10818e2fb03f28ab8"
             }
             timeout(time: 2, unit: 'MINUTES') {
               script {
