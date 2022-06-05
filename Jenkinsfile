@@ -38,18 +38,18 @@ environment {
 //       }
 //     }
 
-    stage('SonarQube - SAST') {
-          steps {
-            withSonarQubeEnv('SonarQube') {
-              sh "mvn sonar:sonar -Dsonar.projectKey=swotitup_secops -Dsonar.host.url=http://swotitup.southeastasia.cloudapp.azure.com:9000 -Dsonar.login=2cc8403c8b8d98685979d2d10818e2fb03f28ab8"
-            }
-            timeout(time: 2, unit: 'MINUTES') {
-              script {
-                waitForQualityGate abortPipeline: true
-              }
-            }
-          }
-        }
+//     stage('SonarQube - SAST') {
+//           steps {
+//             withSonarQubeEnv('SonarQube') {
+//               sh "mvn sonar:sonar -Dsonar.projectKey=swotitup_secops -Dsonar.host.url=http://swotitup.southeastasia.cloudapp.azure.com:9000 -Dsonar.login=2cc8403c8b8d98685979d2d10818e2fb03f28ab8"
+//             }
+//             timeout(time: 2, unit: 'MINUTES') {
+//               script {
+//                 waitForQualityGate abortPipeline: true
+//               }
+//             }
+//           }
+//         }
 // stage('Vulnerability Scan - Docker ') {
 //       steps {
 //         sh "mvn dependency-check:check"
