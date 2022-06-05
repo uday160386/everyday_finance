@@ -91,14 +91,14 @@ environment {
             }
           }
         }
-        stages {
+
             stage('Testing Slack') {
               steps {
                 sh 'exit 1'
               }
             }
 
-          }
+
 //      stage('OWASP ZAP - DAST') {
 //                steps {
 //                  withKubeConfig([credentialsId: 'kubeconfig']) {
