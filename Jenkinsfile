@@ -33,44 +33,44 @@ environment {
         }
       }
     }
-// stage('Mutation Tests - PIT') {
-//       steps {
-//         sh "mvn org.pitest:pitest-maven:mutationCoverage"
-//       }
-//       post {
-//         always {
-//           pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
-//         }
-//       }
-//     }
+stage('Mutation Tests - PIT') {
+      steps {
+        sh "mvn org.pitest:pitest-maven:mutationCoverage"
+      }
+      post {
+        always {
+          pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
+        }
+      }
+    }
 
-//     stage('SonarQube - SAST') {
-//           steps {
-//             withSonarQubeEnv('SonarQube') {
-//               sh "mvn sonar:sonar -Dsonar.projectKey=swotitup_secops -Dsonar.host.url=http://swotitup.southeastasia.cloudapp.azure.com:9000 -Dsonar.login=2cc8403c8b8d98685979d2d10818e2fb03f28ab8"
-//             }
-//             timeout(time: 2, unit: 'MINUTES') {
-//               script {
-//                 waitForQualityGate abortPipeline: true
-//               }
-//             }
-//           }
-//         }
-// stage('Vulnerability Scan - Docker ') {
-//       steps {
-//         sh "mvn dependency-check:check"
-//       }
-//       post {
-//         always {
-//           dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
-//         }
-//       }
-//     }
-//  stage('Vulnerability Scan - Kubernetes') {
-//       steps {
-//         sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
-//       }
-//     }
+    stage('SonarQube - SAST') {
+          steps {
+            withSonarQubeEnv('SonarQube') {
+              sh "mvn sonar:sonar -Dsonar.projectKey=swotitup_secops -Dsonar.host.url=http://swotitup.southeastasia.cloudapp.azure.com:9000 -Dsonar.login=2cc8403c8b8d98685979d2d10818e2fb03f28ab8"
+            }
+            timeout(time: 2, unit: 'MINUTES') {
+              script {
+                waitForQualityGate abortPipeline: true
+              }
+            }
+          }
+        }
+stage('Vulnerability Scan - Docker ') {
+      steps {
+        sh "mvn dependency-check:check"
+      }
+      post {
+        always {
+          dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+        }
+      }
+    }
+ stage('Vulnerability Scan - Kubernetes') {
+      steps {
+        sh 'docker run --rm -v $(pwd):/project openpolicyagent/conftest test --policy opa-k8s-security.rego k8s_deployment_service.yaml'
+      }
+    }
     stage('Docker Build and Push') {
       steps {
 
@@ -99,26 +99,18 @@ environment {
             }
 
 
-//      stage('OWASP ZAP - DAST') {
-//                steps {
-//                  withKubeConfig([credentialsId: 'kubeconfig']) {
-//                    sh 'bash zap.sh'
-//                  }
-//                }
-//              }
+     stage('OWASP ZAP - DAST') {
+               steps {
+                 withKubeConfig([credentialsId: 'kubeconfig']) {
+                   sh 'bash zap.sh'
+                 }
+               }
+             }
   }
   post {
       always {
        publishHTML([allowMissing:false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'owasp-zap-report', reportFiles: 'zap_report.html', reportName: 'OWASP ZAP HTML Report', reportTitles: 'OWASP ZAP'])
         send_notification currentBuild.result
       }
-
-      // success {
-
-      // }
-
-      // failure {
-
-      // }
     }
 }
