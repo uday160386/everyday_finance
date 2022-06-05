@@ -3,6 +3,8 @@ pipeline {
 
 environment {
 		DOCKERHUB_CREDENTIALS=credentials('docker-hub')
+		applicationURL = "http://swotitup.southeastasia.cloudapp.azure.com"
+        applicationURI = "/customerses"
 
 	}
   stages {
@@ -45,6 +47,13 @@ environment {
               script {
                 waitForQualityGate abortPipeline: true
               }
+            }
+          }
+        }
+    stage('OWASP ZAP - DAST') {
+          steps {
+            withKubeConfig([credentialsId: 'kubeconfig']) {
+              sh 'bash zap.sh'
             }
           }
         }
